@@ -20,7 +20,7 @@ export default class Square extends Vue {
    * Mark this square with the current player
    */
   private mark() {
-    if (!this.isMarked()) {
+    if (!this.isMarked() && store.state.winner === null) {
       const currentPlayer = store.state.currentPlayer;
       store.dispatch(Types.actions.MARK_AS_PLAYED, this.index)
         .then(() => {
@@ -34,7 +34,7 @@ export default class Square extends Vue {
             const currentScore = store.state.score[currentPlayer];
             store.dispatch(Types.actions.ADD_MATCHED_PATTERN, { pattern: matchedIndices, player: currentPlayer });
             if (currentScore > 0) { // currentScore is not reactive. A workaround to handle async nature
-              console.log(currentPlayer + ' Won');
+              store.dispatch(Types.actions.SET_WINNER, currentPlayer);
             }
           }
         });

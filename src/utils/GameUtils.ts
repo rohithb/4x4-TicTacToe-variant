@@ -11,7 +11,9 @@ export default class GameUtils {
     const possibleSolutionIndices: Array<[number, number]> = [];
     // const matchingIndices: [number, number, number];
     const neighbours: { [key: string]: number } = {
+      // TODO: Need to verify on same row or not
       LEFT: currentIndex - 1, // left
+      // TODO: Need to verify on same row or not
       RIGHT: currentIndex + 1, // right
       TOP: currentIndex - size, // top
       BOTTOM: currentIndex + size, // bottom

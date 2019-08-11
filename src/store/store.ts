@@ -5,8 +5,8 @@ import Player from '@/constants/Players';
 
 Vue.use(Vuex);
 
-const store: StoreOptions<RootState> = {
-  state: {
+function getInitialState() {
+  return {
     board: [],
     size: 4,
     currentPlayer: Player.Player1,
@@ -14,12 +14,24 @@ const store: StoreOptions<RootState> = {
       [Player.Player1]: 0,
       [Player.Player2]: 0
     },
-    matchedIndices: []
-  },
+    matchedIndices: [],
+    winner: null
+  };
+}
+
+const store: StoreOptions<RootState> = {
+  state: getInitialState(),
   mutations: {
     [Types.mutations.INIT_BOARD]: state => {
+      const s = getInitialState();
       const length = state.size * state.size;
       state.board = new Array(length).fill(-1);
+      state.size = s.size;
+      state.currentPlayer = s.currentPlayer;
+      state.score[Player.Player1] = 0;
+      state.score[Player.Player2] = 0;
+      state.matchedIndices = [];
+      state.winner = null;
     },
     [Types.mutations.SET_PLAYER]: (state, player: Player) => {
       state.currentPlayer = player;
@@ -37,6 +49,9 @@ const store: StoreOptions<RootState> = {
     },
     [Types.mutations.INCREMENT_SCORE]: (state: RootState, player: Player) => {
       state.score[player]++;
+    },
+    [Types.mutations.SET_WINNER]: (state: RootState, player: Player) => {
+      state.winner = player;
     }
   },
   actions: {
@@ -59,7 +74,7 @@ const store: StoreOptions<RootState> = {
     /**
      * Mark a square with either 0 or 1 and changes the current player
      */
-    [Types.actions.MARK_AS_PLAYED]: async (context, index) => {
+    [Types.actions.MARK_AS_PLAYED]: async (context, index: number) => {
       context.commit(Types.mutations.MARK_AS_PLAYED, {
         index,
         player: context.state.currentPlayer
@@ -71,6 +86,9 @@ const store: StoreOptions<RootState> = {
     [Types.actions.ADD_MATCHED_PATTERN]: (context, { pattern, player }) => {
       context.commit(Types.mutations.PUSH_MATCHED_PATTERN, pattern);
       context.commit(Types.mutations.INCREMENT_SCORE, player);
+    },
+    [Types.actions.SET_WINNER]: (context, player: Player) => {
+      context.commit(Types.mutations.SET_WINNER, player);
     }
   }
 };

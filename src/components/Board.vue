@@ -1,22 +1,30 @@
 <template>
-  <ul>
-    <table class="board">
-      <tr v-for="i in size" :key="i">
-        <Square v-for="j in size" :key="(i-1)*size+j" :index="(i-1)*size+j-1"></Square>
-      </tr>
-    </table>
-  </ul>
+  <div class="container">
+    <div class="row">
+      <div class="col-5">
+        <table class="board">
+          <tr v-for="i in size" :key="i">
+            <Square v-for="j in size" :key="(i-1)*size+j" :index="(i-1)*size+j-1"></Square>
+          </tr>
+        </table>
+      </div>
+      <Info cls="col-3" />
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import Square from './Square.vue';
+import Info from './Info.vue';
 import store from '../store/store';
 import { Types } from '../store/types';
+import 'bootstrap-4-grid/css/grid.css';
 
 @Component({
   components: {
-    Square
+    Square,
+    Info
   }
 })
 export default class Board extends Vue {
@@ -27,7 +35,6 @@ export default class Board extends Vue {
   }
 
 }
-
 </script>
 
 <style scoped lang="less">
@@ -44,10 +51,7 @@ td {
 
 table {
   border-collapse: collapse;
-  position: absolute;
-  left: 50%;
-  margin-left: -155px;
-  top: 50px;
+  margin: auto;
 }
 
 table tr:first-child td {
