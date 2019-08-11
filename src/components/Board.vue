@@ -11,7 +11,8 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import Square from './Square.vue';
-import store from '../store';
+import store from '../store/store';
+import { Types } from '../store/types';
 
 @Component({
   components: {
@@ -22,7 +23,7 @@ export default class Board extends Vue {
   @Prop() private size!: number;
 
   public created(): void {
-    store.dispatch('initBoard');
+    store.dispatch(Types.actions.INIT_BOARD);
   }
 
 }

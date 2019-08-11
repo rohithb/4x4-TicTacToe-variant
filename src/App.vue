@@ -7,7 +7,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import Board from './components/Board.vue';
-import store from './store';
+import store from './store/store';
 
 @Component({
   components: {
