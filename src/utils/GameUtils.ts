@@ -2,26 +2,14 @@ import Player from '@/constants/Players';
 
 export default class GameUtils {
   // TODO: Refactor
-  public static checkPoints(
+  public static checkMatchingPatterns(
     board: number[],
     currentIndex: number,
     currentPlayer: Player,
     size: number
   ): [number, number, number] | null {
     const possibleSolutionIndices: Array<[number, number]> = [];
-    // const matchingIndices: [number, number, number];
-    const neighbours: { [key: string]: number } = {
-      // TODO: Need to verify on same row or not
-      LEFT: currentIndex - 1, // left
-      // TODO: Need to verify on same row or not
-      RIGHT: currentIndex + 1, // right
-      TOP: currentIndex - size, // top
-      BOTTOM: currentIndex + size, // bottom
-      TOP_RIGHT: currentIndex - (size - 1), // top right
-      BOTTOM_LEFT: currentIndex + (size - 1), // bottom left
-      TOP_LEFT: currentIndex - (size + 1), // top left
-      BOTTOM_RIGHT: currentIndex + (size + 1) // bottom right
-    };
+    const neighbours = this.getNeighbours(currentIndex, size);
 
     // check left and right
     if (checkSameValueOrNot([neighbours.LEFT, neighbours.RIGHT])) {
@@ -42,30 +30,48 @@ export default class GameUtils {
       if (neighbours[key] >= 0 && neighbours[key] < board.length) {
         if (board[neighbours[key]] === currentPlayer) {
           let nextIndexToCheck: number = -1;
+          const [nx, ny] = this.getCoordinateByIndex(neighbours[key], size);
+
           switch (key) {
             case 'LEFT':
-              nextIndexToCheck = neighbours[key] - 1;
+              nextIndexToCheck = this.getIndexByCoordinate(nx, ny - 1, size);
               break;
             case 'RIGHT':
-              nextIndexToCheck = neighbours[key] + 1;
+              nextIndexToCheck = this.getIndexByCoordinate(nx, ny + 1, size);
               break;
             case 'TOP':
-              nextIndexToCheck = neighbours[key] - size;
+              nextIndexToCheck = this.getIndexByCoordinate(nx - 1, ny, size);
               break;
             case 'BOTTOM':
-              nextIndexToCheck = neighbours[key] + size;
+              nextIndexToCheck = this.getIndexByCoordinate(nx + 1, ny, size);
               break;
             case 'TOP_RIGHT':
-              nextIndexToCheck = neighbours[key] - (size - 1);
+              nextIndexToCheck = this.getIndexByCoordinate(
+                nx - 1,
+                ny + 1,
+                size
+              );
               break;
             case 'BOTTOM_LEFT':
-              nextIndexToCheck = neighbours[key] + (size - 1);
+              nextIndexToCheck = this.getIndexByCoordinate(
+                nx + 1,
+                ny - 1,
+                size
+              );
               break;
             case 'TOP_LEFT':
-              nextIndexToCheck = neighbours[key] - (size + 1);
+              nextIndexToCheck = this.getIndexByCoordinate(
+                nx - 1,
+                ny - 1,
+                size
+              );
               break;
             case 'BOTTOM_RIGHT':
-              nextIndexToCheck = neighbours[key] + (size + 1);
+              nextIndexToCheck = this.getIndexByCoordinate(
+                nx + 1,
+                ny + 1,
+                size
+              );
               break;
           }
           if (
@@ -97,5 +103,51 @@ export default class GameUtils {
       }
       return false;
     }
+  }
+
+  public static getNeighbours(
+    currentIndex: number,
+    size: number
+  ): { [key: string]: number } {
+    const neighbours: { [key: string]: number } = {};
+    const [x, y] = this.getCoordinateByIndex(currentIndex, size);
+    neighbours.LEFT = this.getIndexByCoordinate(x, y - 1, size);
+    neighbours.RIGHT = this.getIndexByCoordinate(x, y + 1, size);
+    neighbours.TOP = this.getIndexByCoordinate(x - 1, y, size);
+    neighbours.BOTTOM = this.getIndexByCoordinate(x + 1, y, size);
+    neighbours.TOP_RIGHT = this.getIndexByCoordinate(x - 1, y + 1, size);
+    neighbours.BOTTOM_LEFT = this.getIndexByCoordinate(x + 1, y - 1, size);
+    neighbours.TOP_LEFT = this.getIndexByCoordinate(x - 1, y - 1, size);
+    neighbours.BOTTOM_RIGHT = this.getIndexByCoordinate(x + 1, y + 1, size);
+    return neighbours;
+  }
+
+  /**
+   * Get the 1D array co-ordinate given the 2d array address
+   * @param index index in the 1D array
+   * @param size width of the 2d array
+   */
+  private static getCoordinateByIndex(
+    index: number,
+    size: number
+  ): [number, number] {
+    return [Math.floor(index / size), index % size];
+  }
+
+  /**
+   * Get the 1D array index for a 2D array coordinate
+   * @param x row number of the 2d array
+   * @param y column number of the 2d array
+   * @param size width of the 2d array; id index does not exsist return -1
+   */
+  private static getIndexByCoordinate(
+    x: number,
+    y: number,
+    size: number
+  ): number {
+    if (x < 0 || y < 0 || x >= size || y >= size) {
+      return -1;
+    }
+    return x * size + y;
   }
 }

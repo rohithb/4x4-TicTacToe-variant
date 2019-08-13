@@ -15,7 +15,8 @@ function getInitialState() {
       [Player.Player2]: 0
     },
     matchedIndices: [],
-    winner: null
+    winner: null,
+    markedSquareCount: 0
   };
 }
 
@@ -32,6 +33,7 @@ const store: StoreOptions<RootState> = {
       state.score[Player.Player2] = 0;
       state.matchedIndices = [];
       state.winner = null;
+      state.markedSquareCount = 0;
     },
     [Types.mutations.SET_PLAYER]: (state, player: Player) => {
       state.currentPlayer = player;
@@ -52,6 +54,9 @@ const store: StoreOptions<RootState> = {
     },
     [Types.mutations.SET_WINNER]: (state: RootState, player: Player) => {
       state.winner = player;
+    },
+    [Types.mutations.INCREMENT_MARKED_SQ_COUNT]: state => {
+      state.markedSquareCount++;
     }
   },
   actions: {
@@ -79,6 +84,7 @@ const store: StoreOptions<RootState> = {
         index,
         player: context.state.currentPlayer
       });
+      context.dispatch(Types.actions.INCREMENT_MARKED_SQ_COUNT);
       // WARNING: Async execution
       await context.dispatch(Types.actions.TOGGLE_CURRENT_PLAYER);
     },
@@ -89,6 +95,9 @@ const store: StoreOptions<RootState> = {
     },
     [Types.actions.SET_WINNER]: (context, player: Player) => {
       context.commit(Types.mutations.SET_WINNER, player);
+    },
+    [Types.actions.INCREMENT_MARKED_SQ_COUNT]: context => {
+      context.commit(Types.mutations.INCREMENT_MARKED_SQ_COUNT);
     }
   }
 };
