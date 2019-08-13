@@ -14,12 +14,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import Square from './Square.vue';
 import Info from './Info.vue';
 import store from '../store/store';
 import { Types } from '../store/types';
+import AutoPlay from '../utils/AutoPlay';
 import 'bootstrap-4-grid/css/grid.css';
+import Player from '../constants/Players';
 
 @Component({
   components: {
@@ -32,6 +34,14 @@ export default class Board extends Vue {
 
   public created(): void {
     store.dispatch(Types.actions.INIT_BOARD);
+  }
+
+  get currentPlayer(): number {
+    return store.state.currentPlayer;
+  }
+  @Watch('currentPlayer')
+  private onCurrentPlayerChange(currentPlayer: number): void {
+    AutoPlay.autoPlay(currentPlayer, store.state);
   }
 
 }

@@ -19,8 +19,8 @@
 </template>
 
 <script lang="ts">
-import { Vue, Prop, Component } from 'vue-property-decorator'
-import store from "../store/store";
+import { Vue, Prop, Component } from 'vue-property-decorator';
+import store from '../store/store';
 import { Types } from '../store/types';
 
 @Component

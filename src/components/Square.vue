@@ -1,5 +1,6 @@
 <template>
   <td
+    :id="'sq-'+index"
     class="square"
     @click="mark()"
     :class="{invalid: isInvalid, matched:isInMatchedIndices, player2:currentPlayer, player1: !currentPlayer}"
@@ -24,7 +25,7 @@ export default class Square extends Vue {
       const currentPlayer = store.state.currentPlayer;
       store.dispatch(Types.actions.MARK_AS_PLAYED, this.index)
         .then(() => {
-          let matchedIndices = GameUtils.checkMatchingPatterns(
+          const matchedIndices = GameUtils.checkMatchingPatterns(
             store.state.board,
             this.index,
             currentPlayer,
@@ -57,14 +58,9 @@ export default class Square extends Vue {
   }
 
   get currentPlayer() {
-    return store.state.currentPlayer
+    return store.state.currentPlayer;
   }
 
-  private getCoordinate(): string {
-    let x = Math.floor(this.index / 4);
-    let y = this.index % 4;
-    return x + ',' + y;
-  }
 
   /**
    * function to render X and O instead of 0 and 1 used in the array
