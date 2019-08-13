@@ -1,14 +1,20 @@
 import Player from '@/constants/Players';
 
 export default class GameUtils {
-  // TODO: Refactor
+  /**
+   * Check any new matching pattern in the board created by the current movement.
+   * @param board Current state of the board
+   * @param currentIndex Player made the current movement
+   * @param currentPlayer Index of the square which player is currently played
+   * @param size Width of the board
+   */
   public static checkMatchingPatterns(
     board: number[],
     currentIndex: number,
     currentPlayer: Player,
     size: number
   ): [number, number, number] | null {
-    const possibleSolutionIndices: Array<[number, number]> = [];
+    // TODO: Refactor
     const neighbours = this.getNeighbours(currentIndex, size);
 
     // check left and right
@@ -88,9 +94,8 @@ export default class GameUtils {
     return null;
 
     /**
-     * Check given 3 indices on board is played by speificed player
-     * @param arr
-     * @param player
+     * Check given 2 indices on board is played by current player
+     * @param arr array of indices to to checked
      */
     function checkSameValueOrNot(arr: [number, number]): boolean {
       if (
@@ -105,6 +110,11 @@ export default class GameUtils {
     }
   }
 
+  /**
+   * Get the indices of the neighbouring squares on the board for a given index
+   * @param currentIndex index of the 1D array
+   * @param size width of the board
+   */
   public static getNeighbours(
     currentIndex: number,
     size: number
